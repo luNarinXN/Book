@@ -272,3 +272,91 @@ footer {
         grid-template-columns: 1fr;
     }
 }
+
+/* Переключатель темы */
+.theme-toggle {
+    position: fixed;
+    top: 100px;
+    right: 30px;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    z-index: 1000;
+    transition: transform 0.3s ease;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
+}
+
+/* Светлая тема (по умолчанию) */
+[data-theme="light"] {
+    --bg-color: #ffffff;
+    --text-color: #333333;
+    --header-bg: #2c3e50;
+    --card-bg: #ffffff;
+    --card-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    --hero-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --section-bg: #f8f9fa;
+    --border-color: #ecf0f1;
+}
+
+/* Темная тема */
+[data-theme="dark"] {
+    --bg-color: #1a1a1a;
+    --text-color: #e0e0e0;
+    --header-bg: #0d1117;
+    --card-bg: #2d3748;
+    --card-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    --hero-bg: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    --section-bg: #2d3748;
+    --border-color: #4a5568;
+}
+
+/* Применяем CSS переменные */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+}
+
+.navbar {
+    background: var(--header-bg);
+}
+
+.hero {
+    background: var(--hero-bg);
+}
+
+.books-section,
+.contact-section {
+    background: var(--section-bg);
+}
+
+.book-card {
+    background: var(--card-bg);
+    box-shadow: var(--card-shadow);
+}
+
+.book-content {
+    background: var(--bg-color);
+    color: var(--text-color);
+}
+
+.chapter {
+    border-bottom: 2px solid var(--border-color);
+}
+
+.contact-form input,
+.contact-form textarea {
+    background: var(--card-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+    color: var(--text-color);
+    opacity: 0.7;
+}
