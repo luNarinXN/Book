@@ -39,3 +39,32 @@ function openBook(bookId) {
         alert('Эта книга скоро будет доступна для чтения!');
     }
 }
+
+// Переключение темы
+function initTheme() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    updateThemeButton(savedTheme);
+}
+
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateThemeButton(newTheme);
+}
+
+function updateThemeButton(theme) {
+    const themeButton = document.getElementById('themeToggle');
+    if (themeButton) {
+        themeButton.textContent = theme === 'light' ? '🌙' : '☀️';
+        themeButton.title = theme === 'light' ? 'Переключить на темную тему' : 'Переключить на светлую тему';
+    }
+}
+
+// Инициализация темы при загрузке
+document.addEventListener('DOMContentLoaded', function() {
+    initTheme();
+});
