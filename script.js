@@ -30,3 +30,12 @@ document.querySelector('.contact-form')?.addEventListener('submit', function(e) 
     alert('Сообщение отправлено! Спасибо за ваше сообщение.');
     this.reset();
 });
+
+// Функция для открытия книги
+function openBook(bookId) {
+    if (bookId === 'book1') {
+        window.location.href = 'book1.html';
+    } else {
+        alert('Эта книга скоро будет доступна для чтения!');
+    }
+}
