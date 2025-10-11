@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мои Книги - Библиотека автора</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Raleway:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <h1 class="logo">Мои Книги</h1>
+                <ul class="nav-menu">
+                    <li><a href="#home">Главная</a></li>
+                    <li><a href="#books">Книги</a></li>
+                    <li><a href="#about">Об авторе</a></li>
+                    <li><a href="#contact">Контакты</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Добро пожаловать в мир моих книг</h1>
+            <p>Откройте для себя увлекательные истории и захватывающие приключения</p>
+            <a href="#books" class="cta-button">Посмотреть книги</a>
+        </div>
+    </section>
+
+    <section id="books" class="books-section">
+        <div class="container">
+            <h2>Мои Книги</h2>
+            <div class="books-grid">
+                <div class="book-card">
+                    <div class="book-cover">📚</div>
+                    <h3>Название книги 1</h3>
+                    <p>Жанр: Фантастика</p>
+                    <p>Описание книги будет здесь...</p>
+                    <button class="buy-button">Купить</button>
+                </div>
+                <div class="book-card">
+                    <div class="book-cover">📖</div>
+                    <h3>Название книги 2</h3>
+                    <p>Жанр: Детектив</p>
+                    <p>Описание книги будет здесь...</p>
+                    <button class="buy-button">Купить</button>
+                </div>
+                <div class="book-card">
+                    <div class="book-cover">📕</div>
+                    <h3>Название книги 3</h3>
+                    <p>Жанр: Роман</p>
+                    <p>Описание книги будет здесь...</p>
+                    <button class="buy-button">Купить</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about-section">
+        <div class="container">
+            <h2>Об авторе</h2>
+            <div class="about-content">
+                <div class="author-image">
+                    <div class="placeholder-image">👤</div>
+                </div>
+                <div class="author-info">
+                    <h3>Ваше имя</h3>
+                    <p>Здесь вы можете написать о себе, своем творческом пути, вдохновении и планах на будущее.</p>
+                    <p>Расскажите читателям о том, что вас мотивирует писать и какие темы вы исследуете в своих произведениях.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <h2>Контакты</h2>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h3>Свяжитесь со мной</h3>
+                    <p>📧 email@example.com</p>
+                    <p>📱 +380 (XXX) XXX-XX-XX</p>
+                    <div class="social-links">
+                        <a href="#">VK</a>
+                        <a href="#">Telegram</a>
+                        <a href="#">Instagram</a>
+                    </div>
+                </div>
+                <form class="contact-form">
+                    <input type="text" placeholder="Ваше имя" required>
+                    <input type="email" placeholder="Ваш email" required>
+                    <textarea placeholder="Ваше сообщение" rows="5" required></textarea>
+                    <button type="submit">Отправить</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Мои Книги. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
