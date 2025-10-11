@@ -134,18 +134,32 @@ body {
     color: #2c3e50;
 }
 
-.buy-button {
-    background: #27ae60;
+/* Кнопки чтения */
+.read-button {
+    background: #3498db;
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 12px 24px;
     border-radius: 5px;
     cursor: pointer;
-    transition: background 0.3s;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
 }
 
-.buy-button:hover {
-    background: #219a52;
+.read-button:hover {
+    background: #2980b9;
+    transform: translateY(-2px);
+}
+
+.read-button.coming-soon {
+    background: #95a5a6;
+    cursor: not-allowed;
+}
+
+.read-button.coming-soon:hover {
+    background: #7f8c8d;
+    transform: none;
 }
 
 /* Об авторе */
