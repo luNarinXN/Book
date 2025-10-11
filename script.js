@@ -19,7 +19,7 @@ window.addEventListener('scroll', function() {
         navbar.style.background = 'rgba(44, 62, 80, 0.95)';
         navbar.style.backdropFilter = 'blur(10px)';
     } else {
-        navbar.style.background = '#2c3e50';
+        navbar.style.background = 'var(--header-bg)';
         navbar.style.backdropFilter = 'none';
     }
 });
