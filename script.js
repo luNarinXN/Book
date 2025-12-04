@@ -1,218 +1,320 @@
-/**
- * Монохромная библиотека - главный скрипт
- * Управление темами, анимацией книги и History API
- */
-
-// Инициализация приложения
-function initApp() {
+// Код для современного минималистичного сайта с книгой
+// Основной модуль приложения
+const App = (() => {
+    // Состояние приложения
+    const state = {
+        currentPage: 'main',
+        theme: 'dark',
+        bookOpened: false,
+        prefersReducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    };
+    
+    // DOM элементы
+    const elements = {
+        themeToggle: null,
+        themeToggleBook: null,
+        backButton: null,
+        backToMain: null,
+        openBookButton: null,
+        interactiveBook: null,
+        mainPage: null,
+        bookPage: null,
+        prevPageBtn: null,
+        nextPageBtn: null
+    };
+    
+    // Инициализация приложения
+    const init = () => {
+        cacheElements();
+        bindEvents();
+        initTheme();
+        initPageState();
+        setupAccessibility();
+        
+        console.log('Приложение инициализировано. Тема:', state.theme);
+    };
+    
+    // Кэширование DOM элементов
+    const cacheElements = () => {
+        elements.themeToggle = document.getElementById('theme-toggle');
+        elements.themeToggleBook = document.getElementById('theme-toggle-book');
+        elements.backButton = document.getElementById('back-button');
+        elements.backToMain = document.getElementById('back-to-main');
+        elements.openBookButton = document.getElementById('open-book-button');
+        elements.interactiveBook = document.getElementById('interactive-book');
+        elements.mainPage = document.getElementById('main-page');
+        elements.bookPage = document.getElementById('book-page');
+        elements.prevPageBtn = document.getElementById('prev-page');
+        elements.nextPageBtn = document.getElementById('next-page');
+    };
+    
+    // Настройка обработчиков событий
+    const bindEvents = () => {
+        // Переключение темы
+        if (elements.themeToggle) {
+            elements.themeToggle.addEventListener('click', toggleTheme);
+        }
+        
+        if (elements.themeToggleBook) {
+            elements.themeToggleBook.addEventListener('click', toggleTheme);
+        }
+        
+        // Навигация
+        if (elements.openBookButton) {
+            elements.openBookButton.addEventListener('click', openBook);
+        }
+        
+        if (elements.interactiveBook) {
+            elements.interactiveBook.addEventListener('click', openBook);
+        }
+        
+        if (elements.backButton) {
+            elements.backButton.addEventListener('click', goBack);
+        }
+        
+        if (elements.backToMain) {
+            elements.backToMain.addEventListener('click', goBack);
+        }
+        
+        // Навигация по страницам книги
+        if (elements.prevPageBtn) {
+            elements.prevPageBtn.addEventListener('click', goToPrevPage);
+        }
+        
+        if (elements.nextPageBtn) {
+            elements.nextPageBtn.addEventListener('click', goToNextPage);
+        }
+        
+        // Обработка нажатия кнопки "Назад" в браузере
+        window.addEventListener('popstate', handlePopState);
+        
+        // Обработка предпочтений пользователя по анимациям
+        const motionMediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+        motionMediaQuery.addEventListener('change', (e) => {
+            state.prefersReducedMotion = e.matches;
+        });
+    };
+    
     // Инициализация темы
-    initTheme();
-    
-    // Инициализация книги
-    initBook();
-    
-    // Инициализация обработчиков событий
-    initEventListeners();
-    
-    // Проверка начального состояния (если мы на странице книги)
-    checkInitialState();
-}
-
-// ==================== УПРАВЛЕНИЕ ТЕМАМИ ====================
-
-function initTheme() {
-    const themeToggle = document.querySelector('.theme-toggle');
-    const html = document.documentElement;
-    
-    // Проверяем сохранённую тему или системные предпочтения
-    const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-        html.classList.add('theme-dark');
-        html.classList.remove('theme-light');
-    } else {
-        html.classList.add('theme-light');
-        html.classList.remove('theme-dark');
-    }
-    
-    // Обработчик переключателя темы
-    if (themeToggle) {
-        themeToggle.addEventListener('click', toggleTheme);
-    }
-}
-
-function toggleTheme() {
-    const html = document.documentElement;
-    const isDark = html.classList.contains('theme-dark');
-    
-    if (isDark) {
-        html.classList.remove('theme-dark');
-        html.classList.add('theme-light');
-        localStorage.setItem('theme', 'light');
-    } else {
-        html.classList.remove('theme-light');
-        html.classList.add('theme-dark');
-        localStorage.setItem('theme', 'dark');
-    }
-}
-
-// ==================== УПРАВЛЕНИЕ КНИГОЙ ====================
-
-function initBook() {
-    const book = document.getElementById('book');
-    const openBtn = document.getElementById('openBookBtn');
-    const closeBtn = document.getElementById('closeBookBtn');
-    const overlay = document.getElementById('overlay');
-    
-    // Состояние книги
-    window.bookState = {
-        isOpen: false,
-        isAnimating: false
-    };
-    
-    // Функция открытия книги
-    window.openBook = function(animate = true) {
-        if (window.bookState.isAnimating) return;
+    const initTheme = () => {
+        // Проверяем сохранённую тему в localStorage
+        const savedTheme = localStorage.getItem('theme');
         
-        window.bookState.isAnimating = true;
-        window.bookState.isOpen = true;
+        // Проверяем предпочтения системы
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         
-        const book = document.getElementById('book');
-        const overlay = document.getElementById('overlay');
-        
-        // Показываем overlay
-        overlay.classList.add('overlay--active');
-        
-        // Анимация открытия книги
-        if (animate) {
-            book.classList.add('book--open');
-            
-            // Изменяем URL с помощью History API
-            history.pushState({ bookOpen: true }, '', '/book');
-            
-            // Обновляем состояние после анимации
-            setTimeout(() => {
-                window.bookState.isAnimating = false;
-            }, 1200);
+        // Определяем тему: сначала сохранённая, затем системная
+        if (savedTheme) {
+            state.theme = savedTheme;
+        } else if (systemPrefersDark) {
+            state.theme = 'dark';
         } else {
-            // Если анимация не нужна (при прямом заходе на /book)
-            book.classList.add('book--open');
-            book.style.transition = 'none';
-            window.bookState.isAnimating = false;
-            
-            setTimeout(() => {
-                book.style.transition = '';
-            }, 100);
+            state.theme = 'light';
         }
+        
+        // Применяем тему
+        applyTheme();
     };
     
-    // Функция закрытия книги
-    window.closeBook = function(animate = true) {
-        if (window.bookState.isAnimating) return;
-        
-        window.bookState.isAnimating = true;
-        window.bookState.isOpen = false;
-        
-        const book = document.getElementById('book');
-        const overlay = document.getElementById('overlay');
-        
-        // Скрываем overlay
-        overlay.classList.remove('overlay--active');
-        
-        // Анимация закрытия книги
-        if (animate) {
-            book.classList.remove('book--open');
-            
-            // Возвращаемся назад в истории
-            history.back();
-            
-            // Обновляем состояние после анимации
-            setTimeout(() => {
-                window.bookState.isAnimating = false;
-            }, 1200);
+    // Применение текущей темы
+    const applyTheme = () => {
+        if (state.theme === 'dark') {
+            document.documentElement.classList.add('dark-theme');
         } else {
-            // Если анимация не нужна
-            book.classList.remove('book--open');
-            window.bookState.isAnimating = false;
+            document.documentElement.classList.remove('dark-theme');
+        }
+        
+        // Сохраняем в localStorage
+        localStorage.setItem('theme', state.theme);
+    };
+    
+    // Переключение темы
+    const toggleTheme = () => {
+        state.theme = state.theme === 'dark' ? 'light' : 'dark';
+        applyTheme();
+        
+        // Анимация переключения
+        if (!state.prefersReducedMotion) {
+            document.documentElement.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+            setTimeout(() => {
+                document.documentElement.style.transition = '';
+            }, 300);
         }
     };
     
-    // Обработчики событий для элементов книги
-    if (openBtn) {
-        openBtn.addEventListener('click', () => window.openBook(true));
-    }
-    
-    if (closeBtn) {
-        closeBtn.addEventListener('click', () => window.closeBook(true));
-    }
-    
-    // Клик на overlay закрывает книгу
-    if (overlay) {
-        overlay.addEventListener('click', () => window.closeBook(true));
-    }
-    
-    // Клик на обложку книги
-    const bookCover = document.querySelector('.book__cover');
-    if (bookCover) {
-        bookCover.addEventListener('click', () => window.openBook(true));
-    }
-}
-
-// ==================== ИСТОРИЯ И НАВИГАЦИЯ ====================
-
-function initEventListeners() {
-    // Обработка кнопки "Назад" браузера
-    window.addEventListener('popstate', function(event) {
-        // Если состояние содержит флаг открытой книги, закрываем её
-        if (window.bookState.isOpen) {
-            window.closeBook(true);
-        }
-    });
-    
-    // Обработка клавиши Escape
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape' && window.bookState.isOpen) {
-            window.closeBook(true);
-        }
-    });
-}
-
-// ==================== ПРОВЕРКА НАЧАЛЬНОГО СОСТОЯНИЯ ====================
-
-function checkInitialState() {
-    // Если мы уже на странице /book (при прямом заходе или обновлении)
-    if (window.location.pathname.endsWith('/book') || 
-        window.location.pathname.endsWith('/book.html') ||
-        window.location.hash === '#book') {
+    // Инициализация состояния страницы
+    const initPageState = () => {
+        // Проверяем URL для определения текущей страницы
+        const path = window.location.pathname;
+        const hash = window.location.hash;
         
-        // Открываем книгу без анимации
-        setTimeout(() => {
-            if (typeof window.openBook === 'function') {
-                window.openBook(false);
+        // Если URL содержит /book или #book, открываем страницу книги
+        if (path.includes('book') || hash === '#book') {
+            openBookPage(false); // Без анимации при загрузке
+            updateHistory('book', false); // Обновляем историю без события
+        }
+    };
+    
+    // Открытие книги (с анимацией)
+    const openBook = () => {
+        if (state.bookOpened) return;
+        
+        // Добавляем класс для анимации открытия книги
+        if (elements.interactiveBook && !state.prefersReducedMotion) {
+            elements.interactiveBook.classList.add('book--opened');
+            
+            // Ждём завершения анимации и переходим на страницу книги
+            setTimeout(() => {
+                openBookPage(true);
+                updateHistory('book', true);
+            }, 800);
+        } else {
+            // Без анимации
+            openBookPage(true);
+            updateHistory('book', true);
+        }
+    };
+    
+    // Открытие страницы книги
+    const openBookPage = (withAnimation = true) => {
+        state.currentPage = 'book';
+        state.bookOpened = true;
+        
+        // Переключаем видимость страниц
+        if (elements.mainPage) {
+            elements.mainPage.classList.remove('active');
+        }
+        
+        if (elements.bookPage) {
+            if (withAnimation && !state.prefersReducedMotion) {
+                // Анимация появления страницы книги
+                setTimeout(() => {
+                    elements.bookPage.classList.add('active');
+                }, 100);
+            } else {
+                elements.bookPage.classList.add('active');
             }
-        }, 100);
-    }
-}
+        }
+        
+        // Показываем кнопку "Назад" в шапке
+        if (elements.backButton) {
+            elements.backButton.style.display = 'block';
+        }
+    };
+    
+    // Возврат на главную
+    const goBack = () => {
+        if (state.currentPage !== 'book') return;
+        
+        // Закрываем книгу с анимацией
+        if (elements.interactiveBook && !state.prefersReducedMotion) {
+            elements.interactiveBook.classList.remove('book--opened');
+        }
+        
+        // Переходим на главную страницу
+        closeBookPage();
+        updateHistory('main', true);
+    };
+    
+    // Закрытие страницы книги
+    const closeBookPage = () => {
+        state.currentPage = 'main';
+        state.bookOpened = false;
+        
+        // Переключаем видимость страниц
+        if (elements.bookPage) {
+            elements.bookPage.classList.remove('active');
+        }
+        
+        if (elements.mainPage) {
+            elements.mainPage.classList.add('active');
+        }
+        
+        // Скрываем кнопку "Назад" в шапке
+        if (elements.backButton) {
+            elements.backButton.style.display = 'none';
+        }
+    };
+    
+    // Обработка навигации по истории браузера
+    const handlePopState = (event) => {
+        // Определяем, на какую страницу произошёл переход
+        const path = window.location.pathname;
+        const hash = window.location.hash;
+        
+        if (path.includes('book') || hash === '#book') {
+            // Переход на страницу книги
+            if (state.currentPage !== 'book') {
+                openBookPage(true);
+            }
+        } else {
+            // Переход на главную страницу
+            if (state.currentPage !== 'main') {
+                // Закрываем книгу с анимацией
+                if (elements.interactiveBook && !state.prefersReducedMotion) {
+                    elements.interactiveBook.classList.remove('book--opened');
+                }
+                closeBookPage();
+            }
+        }
+    };
+    
+    // Обновление истории браузера
+    const updateHistory = (page, pushState = true) => {
+        if (pushState) {
+            if (page === 'book') {
+                // Используем hash для имитации отдельной страницы
+                history.pushState({ page: 'book' }, '', '#book');
+            } else {
+                // Возвращаемся к основному URL
+                history.pushState({ page: 'main' }, '', window.location.pathname);
+            }
+        }
+    };
+    
+    // Навигация по страницам книги (заглушка для демонстрации)
+    const goToPrevPage = () => {
+        // В реальном приложении здесь была бы логика перехода к предыдущей странице
+        alert('Это демонстрационная версия. В реальном приложении здесь будет переход к предыдущей странице книги.');
+    };
+    
+    const goToNextPage = () => {
+        // В реальном приложении здесь была бы логика перехода к следующей странице
+        alert('Это демонстрационная версия. В реальном приложении здесь будет переход к следующей странице книги.');
+    };
+    
+    // Настройка доступности
+    const setupAccessibility = () => {
+        // Улучшаем фокус для интерактивных элементов
+        const interactiveElements = document.querySelectorAll('button, [tabindex]');
+        
+        interactiveElements.forEach(el => {
+            el.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    el.click();
+                }
+            });
+        });
+        
+        // Добавляем aria-label для интерактивных элементов, у которых нет текста
+        const iconButtons = document.querySelectorAll('.theme-toggle');
+        iconButtons.forEach(btn => {
+            if (!btn.getAttribute('aria-label')) {
+                btn.setAttribute('aria-label', 'Переключить тему');
+            }
+        });
+    };
+    
+    // Публичные методы
+    return {
+        init,
+        getState: () => ({ ...state }),
+        openBook,
+        goBack,
+        toggleTheme
+    };
+})();
 
-// ==================== ОБРАБОТЧИКИ ДЛЯ REDUCED MOTION ====================
-
-// Проверяем предпочтения пользователя по поводу анимаций
-const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-if (mediaQuery.matches) {
-    // Отключаем плавные переходы
-    document.documentElement.style.setProperty('--transition-base', 'none');
-    document.documentElement.style.setProperty('--transition-fast', 'none');
-}
-
-// ==================== ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ ====================
-
-// Экспортируем функцию инициализации для глобального доступа
-window.initApp = initApp;
-
-// Запускаем инициализацию, если DOM уже загружен
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initApp);
-} else {
-    initApp();
-}
+// Инициализация приложения после загрузки DOM
+document.addEventListener('DOMContentLoaded', App.init);
