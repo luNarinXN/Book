@@ -20,7 +20,9 @@ const App = (() => {
         mainPage: null,
         bookPage: null,
         prevPageBtn: null,
-        nextPageBtn: null
+        nextPageBtn: null,
+        comingSoonBook: null,
+        comingSoonButton: null
     };
     
     // Инициализация приложения
@@ -46,6 +48,8 @@ const App = (() => {
         elements.bookPage = document.getElementById('book-page');
         elements.prevPageBtn = document.getElementById('prev-page');
         elements.nextPageBtn = document.getElementById('next-page');
+        elements.comingSoonBook = document.getElementById('coming-soon-book');
+        elements.comingSoonButton = document.getElementById('coming-soon-button');
     };
     
     // Настройка обработчиков событий
@@ -74,6 +78,15 @@ const App = (() => {
         
         if (elements.backToMain) {
             elements.backToMain.addEventListener('click', goBack);
+        }
+        
+        // Вторая книга (скоро будет доступно)
+        if (elements.comingSoonBook) {
+            elements.comingSoonBook.addEventListener('click', showComingSoonMessage);
+        }
+        
+        if (elements.comingSoonButton) {
+            elements.comingSoonButton.addEventListener('click', showComingSoonMessage);
         }
         
         // Навигация по страницам книги
@@ -272,6 +285,66 @@ const App = (() => {
         }
     };
     
+    // Показать сообщение "Скоро будет доступно"
+    const showComingSoonMessage = () => {
+        // Создаем всплывающее сообщение
+        const message = document.createElement('div');
+        message.className = 'coming-soon-message';
+        message.innerHTML = `
+            <div class="coming-soon-message__content">
+                <h3>Скоро будет доступно!</h3>
+                <p>Книга "Теневые Тропы" находится в разработке.</p>
+                <p>Следите за обновлениями!</p>
+                <button class="coming-soon-message__close">Закрыть</button>
+            </div>
+        `;
+        
+        document.body.appendChild(message);
+        
+        // Показываем сообщение с анимацией
+        setTimeout(() => {
+            message.classList.add('coming-soon-message--visible');
+        }, 10);
+        
+        // Обработка закрытия
+        const closeBtn = message.querySelector('.coming-soon-message__close');
+        closeBtn.addEventListener('click', () => {
+            message.classList.remove('coming-soon-message--visible');
+            setTimeout(() => {
+                if (message.parentNode) {
+                    message.parentNode.removeChild(message);
+                }
+            }, 300);
+        });
+        
+        // Закрытие по клику вне сообщения
+        message.addEventListener('click', (e) => {
+            if (e.target === message) {
+                message.classList.remove('coming-soon-message--visible');
+                setTimeout(() => {
+                    if (message.parentNode) {
+                        message.parentNode.removeChild(message);
+                    }
+                }, 300);
+            }
+        });
+        
+        // Закрытие по клавише Escape
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') {
+                message.classList.remove('coming-soon-message--visible');
+                setTimeout(() => {
+                    if (message.parentNode) {
+                        message.parentNode.removeChild(message);
+                    }
+                }, 300);
+                document.removeEventListener('keydown', handleEscape);
+            }
+        };
+        
+        document.addEventListener('keydown', handleEscape);
+    };
+    
     // Навигация по страницам книги (заглушка для демонстрации)
     const goToPrevPage = () => {
         // В реальном приложении здесь была бы логика перехода к предыдущей странице
@@ -312,7 +385,8 @@ const App = (() => {
         getState: () => ({ ...state }),
         openBook,
         goBack,
-        toggleTheme
+        toggleTheme,
+        showComingSoonMessage
     };
 })();
 
