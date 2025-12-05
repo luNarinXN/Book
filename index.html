@@ -54,32 +54,63 @@
                         </p>
                     </div>
                     
-                    <!-- Интерактивная книга -->
-                    <div class="book-container">
-                        <div class="book" id="interactive-book">
-                            <div class="book__cover">
-                                <div class="book__cover-front">
-                                    <div class="book__title">Тайны<br>минимализма</div>
-                                    <div class="book__author">Автор: Веб-дизайнер</div>
-                                    <div class="book__decoration"></div>
+                    <!-- Контейнер для книг -->
+                    <div class="books-container">
+                        <!-- Первая книга (открывается) -->
+                        <div class="book-wrapper">
+                            <div class="book" id="interactive-book">
+                                <div class="book__cover">
+                                    <div class="book__cover-front">
+                                        <div class="book__title">Тайны<br>минимализма</div>
+                                        <div class="book__author">Автор: Веб-дизайнер</div>
+                                        <div class="book__decoration"></div>
+                                    </div>
+                                    <div class="book__cover-spine"></div>
+                                    <div class="book__cover-back"></div>
                                 </div>
-                                <div class="book__cover-spine"></div>
-                                <div class="book__cover-back"></div>
+                                <div class="book__pages">
+                                    <div class="book__page book__page--1"></div>
+                                    <div class="book__page book__page--2"></div>
+                                    <div class="book__page book__page--3"></div>
+                                </div>
                             </div>
-                            <div class="book__pages">
-                                <div class="book__page book__page--1"></div>
-                                <div class="book__page book__page--2"></div>
-                                <div class="book__page book__page--3"></div>
-                            </div>
+                            <button class="open-book-button" id="open-book-button" aria-label="Открыть книгу">
+                                <span>Открыть книгу</span>
+                                <svg class="open-book-button__arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
                         </div>
                         
-                        <button class="open-book-button" id="open-book-button" aria-label="Открыть книгу">
-                            <span>Открыть книгу</span>
-                            <svg class="open-book-button__arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </button>
+                        <!-- Вторая книга (не открывается) -->
+                        <div class="book-wrapper book-wrapper--coming-soon">
+                            <div class="book book--coming-soon" id="coming-soon-book">
+                                <div class="book__cover">
+                                    <div class="book__cover-front">
+                                        <div class="book__title">Теневые<br>Тропы</div>
+                                        <div class="book__author">Автор: N.N</div>
+                                        <div class="book__decoration book__decoration--locked">🔒</div>
+                                        <div class="book__coming-soon">Скоро</div>
+                                    </div>
+                                    <div class="book__cover-spine"></div>
+                                    <div class="book__cover-back"></div>
+                                </div>
+                                <div class="book__pages">
+                                    <div class="book__page book__page--1"></div>
+                                    <div class="book__page book__page--2"></div>
+                                    <div class="book__page book__page--3"></div>
+                                </div>
+                            </div>
+                            <button class="open-book-button open-book-button--disabled" id="coming-soon-button" aria-label="Книга скоро будет доступна" disabled>
+                                <span>Скоро будет доступно</span>
+                                <svg class="open-book-button__arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 15V9M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
+                </div>
+            </section>
 
             <section class="hero">
                 <div class="container">
