@@ -990,10 +990,26 @@ body {
 }
 
 /* Стили для глав книги */
+.book-content__body {
+    min-height: 300px;
+    position: relative;
+}
+
+.book-content__body:empty::after {
+    content: 'Загрузка главы...';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--color-text-secondary);
+    font-style: italic;
+}
+
 .book-content__chapter {
     margin-bottom: 60px;
     padding-bottom: 40px;
     border-bottom: 1px solid var(--color-border);
+    animation: fadeIn 0.5s ease-out;
 }
 
 .book-content__chapter:last-child {
@@ -1021,57 +1037,57 @@ body {
     background-color: var(--color-accent-light);
 }
 
-.book-content__body {
-    margin-bottom: 50px;
-}
-
-.book-content__paragraph {
+/* Параграфы в главах */
+.book-content__chapter p {
     margin-bottom: 20px;
     line-height: 1.8;
     text-align: justify;
     text-indent: 1.5em;
 }
 
-.book-content__paragraph:first-letter {
+.book-content__chapter p:first-child {
+    margin-top: 20px;
+}
+
+.book-content__chapter p:first-letter {
     font-size: 1.2em;
     font-weight: var(--font-weight-bold);
     color: var(--color-accent);
 }
 
-/* Диалоги */
-.book-content__paragraph:nth-child(odd) {
+/* Диалоги и прямая речь */
+.book-content__chapter p:nth-child(odd) {
     position: relative;
 }
 
-/* Цитаты и диалоги */
-.book-content__paragraph em {
+/* Цитаты и важные моменты */
+.book-content__chapter p em {
     font-style: italic;
     color: var(--color-accent-light);
 }
 
-.book-content__paragraph strong {
+.book-content__chapter p strong {
     font-weight: var(--font-weight-semibold);
     color: var(--color-accent);
 }
 
-.book-content__highlight {
-    background-color: var(--color-surface-secondary);
-    border-left: 3px solid var(--color-accent);
-    padding: 25px;
-    margin: 30px 0;
-    font-style: italic;
-    border-radius: 0 var(--border-radius-sm) var(--border-radius-sm) 0;
+/* Анимация появления контента главы */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.book-content__highlight p {
-    font-size: 1.2rem;
-    margin-bottom: 10px;
-    color: var(--color-text);
-}
-
-.book-content__highlight cite {
-    font-size: 0.9rem;
-    color: var(--color-text-secondary);
+/* Адаптация для пользователей, предпочитающих уменьшенные анимации */
+@media (prefers-reduced-motion: reduce) {
+    .book-content__chapter {
+        animation: none;
+    }
 }
 
 .book-content__footer {
@@ -1161,4 +1177,140 @@ body {
 .coming-soon-message__close:hover {
     background-color: var(--color-accent);
     color: var(--color-surface);
+}
+
+/* Индикатор загрузки */
+.loading-indicator {
+    display: none;
+    text-align: center;
+    padding: 40px;
+    color: var(--color-text-secondary);
+}
+
+.loading-indicator.active {
+    display: block;
+}
+
+.loading-indicator::after {
+    content: '...';
+    animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+    0%, 20% { content: ''; }
+    40% { content: '.'; }
+    60% { content: '..'; }
+    80%, 100% { content: '...'; }
+}
+
+/* Стили для заголовка текущей главы в мета-информации */
+#current-chapter-title {
+    font-weight: var(--font-weight-medium);
+}
+
+/* Улучшения для мобильных устройств */
+@media (max-width: 576px) {
+    .book-content__navigation {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .book-content__nav-button {
+        width: 100%;
+        max-width: 200px;
+    }
+    
+    .book-content__page-info {
+        order: -1;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    
+    .book-description__read-button {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .open-book-button {
+        padding: 12px 24px;
+        font-size: 1rem;
+    }
+    
+    .feature-card {
+        padding: 20px;
+    }
+}
+
+/* Плавный скролл для всей страницы */
+html {
+    scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+}
+
+/* Выделение текста */
+::selection {
+    background-color: var(--color-accent);
+    color: var(--color-surface);
+}
+
+/* Стили для фокуса на интерактивных элементах */
+a:focus,
+button:focus,
+input:focus,
+textarea:focus,
+select:focus {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+/* Улучшения для печати */
+@media print {
+    .header,
+    .book-page__header,
+    .book-description-header,
+    .book-content__footer,
+    .open-book-button,
+    .theme-toggle,
+    .header__back-button,
+    .back-to-main,
+    .back-to-main-from-description,
+    .book-description__read-button {
+        display: none !important;
+    }
+    
+    .book-content {
+        padding: 20px 0;
+    }
+    
+    .book-content__inner {
+        box-shadow: none;
+        border: none;
+        padding: 0;
+    }
+    
+    body {
+        background-color: white !important;
+        color: black !important;
+    }
+    
+    .page.active {
+        position: static;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+    }
+    
+    .page:not(.active) {
+        display: none;
+    }
+    
+    .page-container {
+        min-height: auto;
+    }
 }
