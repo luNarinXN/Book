@@ -154,7 +154,95 @@
             </footer>
         </main>
         
-        <!-- Страница книги -->
+        <!-- Страница с описанием книги -->
+        <main id="book-description-page" class="page">
+            <div class="book-description-header">
+                <div class="container">
+                    <div class="book-description-header__content">
+                        <button class="back-to-main-from-description" id="back-to-main-from-description" aria-label="Вернуться на главную">
+                            ← Вернуться на главную
+                        </button>
+                        <button class="theme-toggle theme-toggle--book-description" id="theme-toggle-description" aria-label="Переключить тему">
+                            <span class="theme-toggle__icon theme-toggle__icon--light">☀️</span>
+                            <span class="theme-toggle__icon theme-toggle__icon--dark">🌙</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Контент описания книги -->
+            <section class="book-description-content">
+                <div class="container">
+                    <div class="book-description__inner">
+                        <div class="book-description__cover">
+                            <div class="book-description__cover-image">
+                                <div class="book-description__title">Тайны<br>минимализма</div>
+                                <div class="book-description__author">Автор: Веб-дизайнер</div>
+                                <div class="book-description__decoration"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="book-description__info">
+                            <h2 class="book-description__info-title">Тайны минимализма</h2>
+                            <p class="book-description__info-subtitle">Исследование элегантности простоты в дизайне</p>
+                            
+                            <div class="book-description__meta">
+                                <div class="book-description__meta-item">
+                                    <span class="book-description__meta-label">Автор:</span>
+                                    <span class="book-description__meta-value">Веб-дизайнер</span>
+                                </div>
+                                <div class="book-description__meta-item">
+                                    <span class="book-description__meta-label">Жанр:</span>
+                                    <span class="book-description__meta-value">Дизайн, Философия, Технологии</span>
+                                </div>
+                                <div class="book-description__meta-item">
+                                    <span class="book-description__meta-label">Год:</span>
+                                    <span class="book-description__meta-value">2023</span>
+                                </div>
+                                <div class="book-description__meta-item">
+                                    <span class="book-description__meta-label">Страниц:</span>
+                                    <span class="book-description__meta-value">320</span>
+                                </div>
+                            </div>
+                            
+                            <div class="book-description__description">
+                                <h3 class="book-description__description-title">Описание</h3>
+                                <p class="book-description__description-text">
+                                    «Тайны минимализма» — это глубокое исследование философии простоты в современном дизайне. 
+                                    Книга раскрывает принципы минимализма, которые выходят далеко за рамки эстетики и становятся 
+                                    способом мышления в цифровую эпоху.
+                                </p>
+                                <p class="book-description__description-text">
+                                    Автор исследует, как минималистичный подход помогает справляться с информационной перегрузкой, 
+                                    создавать интуитивные интерфейсы и фокусироваться на сути. Книга содержит практические советы 
+                                    по применению минимализма в веб-дизайне, графике и архитектуре цифровых продуктов.
+                                </p>
+                            </div>
+                            
+                            <div class="book-description__features">
+                                <h3 class="book-description__features-title">Особенности книги:</h3>
+                                <ul class="book-description__features-list">
+                                    <li class="book-description__features-item">Анализ психологического воздействия минимализма</li>
+                                    <li class="book-description__features-item">Практические кейсы из мира дизайна</li>
+                                    <li class="book-description__features-item">Интервью с ведущими дизайнерами</li>
+                                    <li class="book-description__features-item">Пошаговые руководства по созданию минималистичных интерфейсов</li>
+                                    <li class="book-description__features-item">Будущее минимализма в эпоху ИИ и VR</li>
+                                </ul>
+                            </div>
+                            
+                            <button class="book-description__read-button" id="read-book-button">
+                                <span>Читать книгу</span>
+                                <svg class="book-description__read-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 6V18M18 12L6 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <!-- Страница книги (контент) -->
         <main id="book-page" class="page">
             <div class="book-page__header">
                 <div class="container">
