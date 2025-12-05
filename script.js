@@ -6,6 +6,7 @@ const App = (() => {
         currentPage: 'main',
         theme: 'dark',
         bookOpened: false,
+        descriptionOpened: false,
         prefersReducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches
     };
     
@@ -13,16 +14,20 @@ const App = (() => {
     const elements = {
         themeToggle: null,
         themeToggleBook: null,
+        themeToggleDescription: null,
         backButton: null,
         backToMain: null,
+        backToMainFromDescription: null,
         openBookButton: null,
         interactiveBook: null,
         mainPage: null,
+        bookDescriptionPage: null,
         bookPage: null,
         prevPageBtn: null,
         nextPageBtn: null,
         comingSoonBook: null,
-        comingSoonButton: null
+        comingSoonButton: null,
+        readBookButton: null
     };
     
     // Инициализация приложения
@@ -40,16 +45,20 @@ const App = (() => {
     const cacheElements = () => {
         elements.themeToggle = document.getElementById('theme-toggle');
         elements.themeToggleBook = document.getElementById('theme-toggle-book');
+        elements.themeToggleDescription = document.getElementById('theme-toggle-description');
         elements.backButton = document.getElementById('back-button');
         elements.backToMain = document.getElementById('back-to-main');
+        elements.backToMainFromDescription = document.getElementById('back-to-main-from-description');
         elements.openBookButton = document.getElementById('open-book-button');
         elements.interactiveBook = document.getElementById('interactive-book');
         elements.mainPage = document.getElementById('main-page');
+        elements.bookDescriptionPage = document.getElementById('book-description-page');
         elements.bookPage = document.getElementById('book-page');
         elements.prevPageBtn = document.getElementById('prev-page');
         elements.nextPageBtn = document.getElementById('next-page');
         elements.comingSoonBook = document.getElementById('coming-soon-book');
         elements.comingSoonButton = document.getElementById('coming-soon-button');
+        elements.readBookButton = document.getElementById('read-book-button');
     };
     
     // Настройка обработчиков событий
@@ -63,21 +72,34 @@ const App = (() => {
             elements.themeToggleBook.addEventListener('click', toggleTheme);
         }
         
+        if (elements.themeToggleDescription) {
+            elements.themeToggleDescription.addEventListener('click', toggleTheme);
+        }
+        
         // Навигация
         if (elements.openBookButton) {
-            elements.openBookButton.addEventListener('click', openBook);
+            elements.openBookButton.addEventListener('click', openBookDescription);
         }
         
         if (elements.interactiveBook) {
-            elements.interactiveBook.addEventListener('click', openBook);
+            elements.interactiveBook.addEventListener('click', openBookDescription);
         }
         
         if (elements.backButton) {
-            elements.backButton.addEventListener('click', goBack);
+            elements.backButton.addEventListener('click', goBackFromBook);
         }
         
         if (elements.backToMain) {
-            elements.backToMain.addEventListener('click', goBack);
+            elements.backToMain.addEventListener('click', goBackFromBook);
+        }
+        
+        if (elements.backToMainFromDescription) {
+            elements.backToMainFromDescription.addEventListener('click', goBackFromDescription);
+        }
+        
+        // Кнопка "Читать книгу" на странице описания
+        if (elements.readBookButton) {
+            elements.readBookButton.addEventListener('click', openBookContent);
         }
         
         // Вторая книга (скоро будет доступно)
@@ -165,11 +187,49 @@ const App = (() => {
         if (path.includes('book') || hash === '#book') {
             openBookPage(false); // Без анимации при загрузке
             updateHistory('book', false); // Обновляем историю без события
+        } else if (hash === '#description') {
+            openBookDescriptionPage(false);
+            updateHistory('description', false);
         }
     };
     
-    // Открытие книги (с анимацией)
-    const openBook = () => {
+    // Открытие описания книги
+    const openBookDescription = () => {
+        if (state.descriptionOpened) return;
+        
+        openBookDescriptionPage(true);
+        updateHistory('description', true);
+    };
+    
+    // Открытие страницы описания книги
+    const openBookDescriptionPage = (withAnimation = true) => {
+        state.currentPage = 'description';
+        state.descriptionOpened = true;
+        
+        // Переключаем видимость страниц
+        if (elements.mainPage) {
+            elements.mainPage.classList.remove('active');
+        }
+        
+        if (elements.bookDescriptionPage) {
+            if (withAnimation && !state.prefersReducedMotion) {
+                // Анимация появления страницы описания
+                setTimeout(() => {
+                    elements.bookDescriptionPage.classList.add('active');
+                }, 100);
+            } else {
+                elements.bookDescriptionPage.classList.add('active');
+            }
+        }
+        
+        // Показываем кнопку "Назад" в шапке
+        if (elements.backButton) {
+            elements.backButton.style.display = 'block';
+        }
+    };
+    
+    // Открытие контента книги (с анимацией)
+    const openBookContent = () => {
         if (state.bookOpened) return;
         
         // Добавляем класс для анимации открытия книги
@@ -194,8 +254,8 @@ const App = (() => {
         state.bookOpened = true;
         
         // Переключаем видимость страниц
-        if (elements.mainPage) {
-            elements.mainPage.classList.remove('active');
+        if (elements.bookDescriptionPage) {
+            elements.bookDescriptionPage.classList.remove('active');
         }
         
         if (elements.bookPage) {
@@ -215,8 +275,8 @@ const App = (() => {
         }
     };
     
-    // Возврат на главную
-    const goBack = () => {
+    // Возврат из книги на главную
+    const goBackFromBook = () => {
         if (state.currentPage !== 'book') return;
         
         // Закрываем книгу с анимацией
@@ -226,6 +286,14 @@ const App = (() => {
         
         // Переходим на главную страницу
         closeBookPage();
+        updateHistory('main', true);
+    };
+    
+    // Возврат из описания на главную
+    const goBackFromDescription = () => {
+        if (state.currentPage !== 'description') return;
+        
+        closeDescriptionPage();
         updateHistory('main', true);
     };
     
@@ -249,6 +317,26 @@ const App = (() => {
         }
     };
     
+    // Закрытие страницы описания
+    const closeDescriptionPage = () => {
+        state.currentPage = 'main';
+        state.descriptionOpened = false;
+        
+        // Переключаем видимость страниц
+        if (elements.bookDescriptionPage) {
+            elements.bookDescriptionPage.classList.remove('active');
+        }
+        
+        if (elements.mainPage) {
+            elements.mainPage.classList.add('active');
+        }
+        
+        // Скрываем кнопку "Назад" в шапке
+        if (elements.backButton) {
+            elements.backButton.style.display = 'none';
+        }
+    };
+    
     // Обработка навигации по истории браузера
     const handlePopState = (event) => {
         // Определяем, на какую страницу произошёл переход
@@ -258,16 +346,32 @@ const App = (() => {
         if (path.includes('book') || hash === '#book') {
             // Переход на страницу книги
             if (state.currentPage !== 'book') {
-                openBookPage(true);
+                // Сначала открываем описание, если мы на главной
+                if (state.currentPage === 'main') {
+                    openBookDescriptionPage(true);
+                    // Затем открываем книгу
+                    setTimeout(() => {
+                        openBookContent();
+                    }, 100);
+                } else {
+                    openBookPage(true);
+                }
+            }
+        } else if (hash === '#description') {
+            // Переход на страницу описания
+            if (state.currentPage !== 'description') {
+                openBookDescriptionPage(true);
             }
         } else {
             // Переход на главную страницу
-            if (state.currentPage !== 'main') {
+            if (state.currentPage === 'book') {
                 // Закрываем книгу с анимацией
                 if (elements.interactiveBook && !state.prefersReducedMotion) {
                     elements.interactiveBook.classList.remove('book--opened');
                 }
                 closeBookPage();
+            } else if (state.currentPage === 'description') {
+                closeDescriptionPage();
             }
         }
     };
@@ -278,6 +382,8 @@ const App = (() => {
             if (page === 'book') {
                 // Используем hash для имитации отдельной страницы
                 history.pushState({ page: 'book' }, '', '#book');
+            } else if (page === 'description') {
+                history.pushState({ page: 'description' }, '', '#description');
             } else {
                 // Возвращаемся к основному URL
                 history.pushState({ page: 'main' }, '', window.location.pathname);
@@ -383,8 +489,10 @@ const App = (() => {
     return {
         init,
         getState: () => ({ ...state }),
-        openBook,
-        goBack,
+        openBookDescription,
+        openBookContent,
+        goBackFromBook,
+        goBackFromDescription,
         toggleTheme,
         showComingSoonMessage
     };
