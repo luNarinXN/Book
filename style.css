@@ -989,14 +989,69 @@ body {
     border-radius: 20px;
 }
 
+/* Стили для глав книги */
+.book-content__chapter {
+    margin-bottom: 60px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.book-content__chapter:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.book-content__chapter-title {
+    font-size: 1.8rem;
+    font-weight: var(--font-weight-bold);
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--color-accent);
+    position: relative;
+}
+
+.book-content__chapter-title::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background-color: var(--color-accent-light);
+}
+
 .book-content__body {
     margin-bottom: 50px;
 }
 
 .book-content__paragraph {
-    margin-bottom: 25px;
-    line-height: 1.7;
+    margin-bottom: 20px;
+    line-height: 1.8;
     text-align: justify;
+    text-indent: 1.5em;
+}
+
+.book-content__paragraph:first-letter {
+    font-size: 1.2em;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-accent);
+}
+
+/* Диалоги */
+.book-content__paragraph:nth-child(odd) {
+    position: relative;
+}
+
+/* Цитаты и диалоги */
+.book-content__paragraph em {
+    font-style: italic;
+    color: var(--color-accent-light);
+}
+
+.book-content__paragraph strong {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-accent);
 }
 
 .book-content__highlight {
@@ -1017,28 +1072,6 @@ body {
 .book-content__highlight cite {
     font-size: 0.9rem;
     color: var(--color-text-secondary);
-}
-
-.book-content__section-title {
-    font-size: 1.5rem;
-    font-weight: var(--font-weight-semibold);
-    margin: 40px 0 20px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--color-border);
-}
-
-.book-content__conclusion {
-    background-color: var(--color-surface-secondary);
-    border-radius: var(--border-radius);
-    padding: 30px;
-    margin-top: 40px;
-}
-
-.book-content__conclusion-title {
-    font-size: 1.3rem;
-    font-weight: var(--font-weight-semibold);
-    margin-bottom: 15px;
-    color: var(--color-text);
 }
 
 .book-content__footer {
