@@ -297,13 +297,83 @@ body {
     text-align: justify;
 }
 
-/* Контейнер для книги */
-.book-container {
+/* Контейнер для книг */
+.books-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 60px;
+    margin-bottom: 80px;
+    position: relative;
+}
+
+@media (max-width: 768px) {
+    .books-container {
+        gap: 40px;
+    }
+}
+
+/* Обертка для книги */
+.book-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 80px;
+    flex: 0 0 auto;
+}
+
+/* Стили для второй книги (скоро будет доступно) */
+.book-wrapper--coming-soon {
     position: relative;
+}
+
+.book--coming-soon {
+    cursor: not-allowed;
+    opacity: 0.7;
+    filter: grayscale(30%);
+}
+
+.book--coming-soon:hover {
+    transform: none !important;
+}
+
+.book__coming-soon {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-accent);
+    font-size: 0.8rem;
+    font-weight: var(--font-weight-bold);
+    padding: 5px 10px;
+    border-radius: 4px;
+    transform: rotate(15deg);
+    box-shadow: var(--shadow-sm);
+}
+
+.book__decoration--locked {
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+}
+
+/* Отключенная кнопка */
+.open-book-button--disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: var(--color-surface-secondary);
+}
+
+.open-book-button--disabled:hover {
+    transform: none !important;
+    box-shadow: var(--shadow-md) !important;
+    background-color: var(--color-surface-secondary) !important;
+}
+
+.open-book-button--disabled .open-book-button__arrow {
+    transform: none !important;
 }
 
 /* Стили книги */
@@ -683,41 +753,4 @@ body {
 
 .book-content__section-title {
     font-size: 1.5rem;
-    font-weight: var(--font-weight-semibold);
-    margin: 40px 0 20px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--color-border);
-}
-
-.book-content__conclusion {
-    background-color: var(--color-surface-secondary);
-    border-radius: var(--border-radius);
-    padding: 30px;
-    margin-top: 40px;
-}
-
-.book-content__conclusion-title {
-    font-size: 1.3rem;
-    font-weight: var(--font-weight-semibold);
-    margin-bottom: 15px;
-    color: var(--color-text);
-}
-
-.book-content__footer {
-    border-top: 1px solid var(--color-border);
-    padding-top: 30px;
-}
-
-.book-content__navigation {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 15px;
-}
-
-.book-content__page-info {
-    color: var(--color-text-secondary);
-    font-size: 0.95rem;
-    font-weight: var(--font-weight-medium);
-}
+    font-weight: var(--font-weight-semib
