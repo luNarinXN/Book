@@ -7,7 +7,9 @@ const App = (() => {
         theme: 'dark',
         bookOpened: false,
         descriptionOpened: false,
-        prefersReducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        prefersReducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+        currentChapter: 1,
+        totalChapters: 10
     };
     
     // DOM элементы
@@ -27,7 +29,8 @@ const App = (() => {
         nextPageBtn: null,
         comingSoonBook: null,
         comingSoonButton: null,
-        readBookButton: null
+        readBookButton: null,
+        pageInfo: null
     };
     
     // Инициализация приложения
@@ -37,6 +40,7 @@ const App = (() => {
         initTheme();
         initPageState();
         setupAccessibility();
+        updateChapterNavigation();
         
         console.log('Приложение инициализировано. Тема:', state.theme);
     };
@@ -59,6 +63,7 @@ const App = (() => {
         elements.comingSoonBook = document.getElementById('coming-soon-book');
         elements.comingSoonButton = document.getElementById('coming-soon-button');
         elements.readBookButton = document.getElementById('read-book-button');
+        elements.pageInfo = document.querySelector('.book-content__page-info');
     };
     
     // Настройка обработчиков событий
@@ -111,7 +116,7 @@ const App = (() => {
             elements.comingSoonButton.addEventListener('click', showComingSoonMessage);
         }
         
-        // Навигация по страницам книги
+        // Навигация по главам книги
         if (elements.prevPageBtn) {
             elements.prevPageBtn.addEventListener('click', goToPrevPage);
         }
@@ -337,6 +342,68 @@ const App = (() => {
         }
     };
     
+    // Навигация по главам книги
+    const goToPrevPage = () => {
+        if (state.currentChapter > 1) {
+            state.currentChapter--;
+            updateChapterNavigation();
+            scrollToTop();
+            updateChapterTitle();
+        } else {
+            alert('Это первая глава.');
+        }
+    };
+    
+    const goToNextPage = () => {
+        if (state.currentChapter < state.totalChapters) {
+            state.currentChapter++;
+            updateChapterNavigation();
+            scrollToTop();
+            updateChapterTitle();
+        } else {
+            alert('Это последняя доступная глава. Продолжение следует...');
+        }
+    };
+    
+    const updateChapterNavigation = () => {
+        if (elements.prevPageBtn) {
+            elements.prevPageBtn.disabled = state.currentChapter === 1;
+        }
+        if (elements.nextPageBtn) {
+            elements.nextPageBtn.disabled = state.currentChapter === state.totalChapters;
+        }
+        if (elements.pageInfo) {
+            elements.pageInfo.textContent = `Глава ${state.currentChapter} из ${state.totalChapters}`;
+        }
+    };
+    
+    const updateChapterTitle = () => {
+        const chapterTitles = [
+            'Глава 1: Пепел и обещания',
+            'Глава 2: Песнь пробуждается',
+            'Глава 3: Мир Ветра',
+            'Глава 4: Ночь в тумане',
+            'Глава 5: Мир Огня',
+            'Глава 6: Сердце Песни',
+            'Глава 7: Сквозь музыку и пепел',
+            'Глава 8: Созданные тенью',
+            'Глава 9: Мир Снов',
+            'Глава 10: Возвращение домой'
+        ];
+        
+        const metaItems = document.querySelectorAll('.book-content__meta-item');
+        if (metaItems.length > 1 && state.currentChapter <= chapterTitles.length) {
+            metaItems[1].textContent = chapterTitles[state.currentChapter - 1];
+        }
+    };
+    
+    const scrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: state.prefersReducedMotion ? 'auto' : 'smooth'
+        });
+    };
+    
     // Обработка навигации по истории браузера
     const handlePopState = (event) => {
         // Определяем, на какую страницу произошёл переход
@@ -451,17 +518,6 @@ const App = (() => {
         document.addEventListener('keydown', handleEscape);
     };
     
-    // Навигация по страницам книги (заглушка для демонстрации)
-    const goToPrevPage = () => {
-        // В реальном приложении здесь была бы логика перехода к предыдущей странице
-        alert('Это демонстрационная версия. В реальном приложении здесь будет переход к предыдущей странице книги.');
-    };
-    
-    const goToNextPage = () => {
-        // В реальном приложении здесь была бы логика перехода к следующей странице
-        alert('Это демонстрационная версия. В реальном приложении здесь будет переход к следующей странице книги.');
-    };
-    
     // Настройка доступности
     const setupAccessibility = () => {
         // Улучшаем фокус для интерактивных элементов
@@ -494,7 +550,9 @@ const App = (() => {
         goBackFromBook,
         goBackFromDescription,
         toggleTheme,
-        showComingSoonMessage
+        showComingSoonMessage,
+        goToPrevPage,
+        goToNextPage
     };
 })();
 
